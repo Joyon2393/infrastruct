@@ -1,0 +1,47 @@
+---
+- name: First play
+  hosts: all
+  become: yes
+  tasks:
+  - name: First task
+    ping:
+
+  - name: Show proc list
+    command: "ps aux"
+    register: abc
+
+  - name: Show output
+    debug:
+      var: abc.stdout_lines
+
+
+  - name: Add sysadmins group
+    group:
+      name: sysadmins
+      state: present
+
+  - name: Create users
+    user:
+      name: "{{ item }}"
+      group: sysadmins
+      append: yes
+    with_items:
+    - romankuchin
+    - hudolejev
+      
+  - name: place ssh keys
+    authorized_key:
+      user: "{{ item.username }}"
+      key: "{{ item.sshkey }}"
+      state: present
+    with_items:
+    - { username: hudolejev, sshkey: "https://github.com/hudolejev.keys" }
+    - { username: romankuchin, sshkey: "https://github.com/romankuchin.keys" }
+
+  - name: disable sudo pass
+    copy:
+      dest: /etc/sudoers.d/{{ item }}
+      content: "{{ item }}      ALL = NOPASSWD: ALL"
+    with_items:
+    - romankuchin
+    - hudolejev
