@@ -1,0 +1,56 @@
+---
+- name: Install Apache2 and PHP
+  hosts: all
+  become: yes
+  vars:
+    port: 8080
+    domain: static
+  tasks:
+  
+    - name: Install Apache2
+      apt: 
+        name=apache2 
+        update_cache=yes 
+        state=latest
+        
+    - name: Install PHP module for Apache2
+      apt: 
+        name=libapache2-mod-php
+        update_cache=yes 
+        state=latest
+        
+    - name: Configure Apache2 to listen on specified port
+      lineinfile: 
+        dest=/etc/apache2/ports.conf 
+        insertafter="Listen 80" 
+        line="Listen {{ port }}" 
+        state=present
+      notify:
+        - restart apache2
+          
+    - name: Create virtual host file for static content
+      template: 
+        src=virtualhost.conf 
+        dest=/etc/apache2/sites-available/{{ domain }}.conf
+      notify:
+        - restart apache2
+          
+    - name: Enable virtual host
+      command: a2ensite {{ domain }}
+      notify:
+        - restart apache2
+        
+        
+  handlers:
+    - name: restart apache2
+      service: 
+        name=apache2 
+        state=restarted
+  
+  
+ 
+
+
+ 
+ 
+
