@@ -1,0 +1,4 @@
+[wordpress]
+127.0.0.1 ansible_user=joyonvm2 ansible_port=2222
+[mysql]
+127.0.0.1 ansible_user=joyonvm2 ansible_port=2222
