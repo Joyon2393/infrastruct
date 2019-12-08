@@ -1,0 +1,31 @@
+- name: Setup backup manager
+  hosts: backup-1
+  become: yes
+  tasks:
+    - name: Create backup user
+      user:
+        name: backupusr
+        shell: /bin/bash
+
+    - name: Create a directory if it does not exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0775'
+        owner: backupusr
+        group: backupusr
+      with_items:
+      - "/var/backup"
+      - "/var/backup/sql"
+      - "/var/backup/dns"
+      - "/var/backup/wordpress"
+
+    - name: Copy file with owner and permissions
+      copy:
+        src: "{{ item }}"
+        dest: "/home/{{ backup_user }}/.ssh/"
+        mode: 0600
+        owner: backupusr
+        group: backupusr
+      with_fileglob:
+        - keys/*

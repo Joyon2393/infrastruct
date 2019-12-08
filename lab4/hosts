@@ -1,4 +1,10 @@
 [wordpress]
+<<<<<<< HEAD
+127.0.0.1 ansible_user=infradev ansible_port=20022
+[mysql]
+127.0.0.1 ansible_user=infradev ansible_port=20022
+=======
 127.0.0.1 ansible_user=joyonvm2 ansible_port=2222
 [mysql]
 127.0.0.1 ansible_user=joyonvm2 ansible_port=2222
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3

@@ -1,0 +1,29 @@
+- name: Setup backup server
+  hosts: backup-remote
+  become: yes
+  tasks:
+    - name: Create backup user
+      user:
+        name: backupusr
+        shell: /bin/bash
+
+    - name: Add pubkey
+      authorized_key:
+        user: backupusr
+        key: "{{ lookup('file', item) }}"
+        state: present
+      with_fileglob:
+        - keys/id_rsa.pub
+
+    - name: Create a directory if it does not exist
+      file:
+        path: "{{ item }}"
+        state: directory
+        mode: '0775'
+        owner: backupusr
+        group: backupusr
+      with_items:
+      - "/srv/backup"
+      - "/srv/backup/mysql"
+      - "/srv/backup/wordpress"
+      - "/srv/backup/dns"

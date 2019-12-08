@@ -1,0 +1,9 @@
+---
+- name: Backup DNS configuration
+  hosts: backup-remote
+  become: yes
+  tasks:
+  - name: Upload Cron Scripts to VM1
+    template:
+      src: templates/dns-backup
+      dest: /etc/cron.d/

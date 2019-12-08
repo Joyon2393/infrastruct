@@ -1,5 +1,9 @@
 ---
+<<<<<<< HEAD
+- name: Install apache and php
+=======
 - name: Install Apache2 and PHP
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
   hosts: wordpress
   become: yes
   tasks:
@@ -9,7 +13,11 @@
       update_cache=yes 
       state=latest
       
+<<<<<<< HEAD
+  - name: Install dependencies
+=======
   - name: Install PHP and MySQL modules for Apache2 and Wordpress
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
     apt: 
       name: ['libapache2-mod-php', 'php', 'php-mysql', 'php-curl', 'php-gd', 'php-mbstring', 'php-xml', 'php-xmlrpc', 'php-soap', 'php-intl', 'php-zip']
       update_cache: yes 
@@ -29,10 +37,17 @@
       copy: no
       extra_opts: [--strip-components=1]
 
+<<<<<<< HEAD
+  - name: Copy config
+    command: mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
+
+  - name: Configure wordpress
+=======
   - name: Copy sample config file
     command: mv /var/www/html/wp-config-sample.php /var/www/html/wp-config.php
 
   - name: Config wordpress
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
     lineinfile:
       path: /var/www/html/wp-config.php
       regexp: "{{item.regexp}}"
@@ -44,7 +59,10 @@
     notify:
       - restart apache2
 
+<<<<<<< HEAD
+=======
         
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
   handlers:
     - name: restart apache2
       service: 
@@ -56,6 +74,15 @@
   hosts: mysql
   become: yes
   tasks:
+<<<<<<< HEAD
+  - name: Install MySQL and python-mysqldb
+    apt: 
+      force_apt_get: yes
+      name: ['mysql-server', 'python-mysqldb']
+      update_cache: yes 
+      state: latest
+      install_recommends: yes
+=======
   - name: Install MySQL
     apt: 
       name=mysql-server
@@ -67,17 +94,26 @@
       name: ['python-pip', 'python-setuptools', 'libmysqlclient-dev', 'python-dev']
       update_cache: yes 
       state: latest
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
 
   - name: Create database
     mysql_db:
       name: "{{ db_name }}"
       state: present
+<<<<<<< HEAD
+=======
       login_unix_socket: /var/run/mysqld/mysqld.sock
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3
 
   - name: Create database user
     mysql_user:
       name: "{{ db_user }}"
       password: "{{ db_password }}"
+<<<<<<< HEAD
+      priv: '{{ db_name }}.*:ALL'
+      state: present
+=======
       priv: 'wordpress.*:ALL'
       state: present
       login_unix_socket: /var/run/mysqld/mysqld.sock
+>>>>>>> 062e4893f3f0ad443283c9837808491ababae9c3

@@ -1,0 +1,12 @@
+---
+- name: Backup wordpress files and databases
+  hosts: backup-agent
+  become: yes
+  tasks:
+  - name: Upload Cron Scripts to VM1
+    template:
+      src: "{{ item }}"
+      dest: /etc/cron.d/
+    with_items:
+    - "templates/mysql-backup"
+    - "templates/wordpress-backup"
