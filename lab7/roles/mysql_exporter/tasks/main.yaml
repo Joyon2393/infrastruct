@@ -1,0 +1,35 @@
+- name: Check that the file exists
+  stat:
+    path: /opt/mysqld_exporter-0.12.1.linux-amd64.tar.gz
+  register: stat_result
+
+- name: Download
+  get_url:
+    url: https://github.com/prometheus/mysqld_exporter/releases/download/v0.12.1/mysqld_exporter-0.12.1.linux-amd64.tar.gz
+    dest: /opt/
+  when: stat_result.stat.exists == False
+
+- name: folder
+  file:
+    path: /opt/mysql_exporter
+    state: directory
+    mode: '0755'
+
+- name: untar
+  unarchive:
+    src: /opt/mysqld_exporter-0.12.1.linux-amd64.tar.gz
+    dest: /opt/mysql_exporter
+    remote_src: yes
+    extra_opts:
+      - --strip-components=1
+
+- name: systemd sql_exporter
+  template:
+    src: mysql_exporter.service.j2
+    dest: /etc/systemd/system/mysql_exporter.service
+
+- name: start exporter
+  service:
+    name: mysql_exporter
+    state: started
+    enabled: yes

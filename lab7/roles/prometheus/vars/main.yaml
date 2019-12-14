@@ -1,0 +1,32 @@
+---
+prometheus_version: "2.13.1"
+jobs:
+  - name: prometheus
+    port: 9090
+    targets:
+      - localhost
+  - name: ping
+    port: 9105
+    targets:
+      - infra01.joyo.com
+      - infra02.joyo.com
+  - name: linux
+    port: 9100
+    targets:
+      - infra01.joyo.com
+      - infra02.joyo.com
+  - name: bind
+    port: 9119
+    targets:
+      - ns1.joyo.com
+      - ns2.joyo.com
+  - name: apache
+    port: 9117
+    targets:
+      - infra01.joyo.com
+      - infra02.joyo.com
+  - name: MySQL
+    port: 9104
+    targets:
+      - infra01.joyo.com
+      - infra02.joyo.com

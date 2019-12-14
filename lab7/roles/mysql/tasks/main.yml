@@ -1,0 +1,21 @@
+- name: Install MySQL and python-mysqldb
+  apt: 
+    force_apt_get: yes
+    name: ['mysql-server', 'python-mysqldb']
+    update_cache: yes 
+    state: latest
+    install_recommends: yes
+
+- name: Install MySQL
+  apt: 
+    name=mysql-server
+    update_cache=yes 
+    state=latest
+
+- name: Create database user
+  mysql_user:
+    name: "{{ mysql_exporter_db_user }}"
+    password: "{{ mysql_exporter_db_password }}"
+    priv: '*.*:ALL'
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock

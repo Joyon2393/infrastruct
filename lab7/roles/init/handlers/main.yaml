@@ -1,0 +1,7 @@
+- name: netplan apply
+  shell: netplan apply
+  
+- name: fix dns
+  template:
+    src: resolv.conf.fix.j2
+    dest: /etc/resolv.conf

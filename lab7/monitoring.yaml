@@ -1,0 +1,22 @@
+---
+- name: setup mysql and mysql_exporter
+  hosts: infra02
+  become: yes
+  roles:
+    - mysql
+    - mysql_exporter
+
+- name: setup bind and exporters
+  hosts: linux
+  become: yes
+  roles:
+    - bind
+    - node_exporter
+    - apache_exporter
+
+- name: prometheus
+  hosts: prometheus
+  become: yes
+  roles:
+    - prometheus
+    - grafana

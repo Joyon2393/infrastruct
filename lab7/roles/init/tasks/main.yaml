@@ -1,0 +1,31 @@
+- name: disable sudo pass
+  copy:
+    dest: /etc/sudoers.d/{{ item }}
+    content: "{{ item }}      ALL = NOPASSWD: ALL"
+  with_items: 
+  - infradev1
+
+- name: Setup interface
+  template:
+    src: templates/enp0s8.j2
+    dest: /etc/netplan/55-enp0s8.yaml
+  notify:
+    - netplan apply
+    - fix dns
+
+- name: systemd-resolved
+  service:
+    name: systemd-resolved
+    state: stopped
+    enabled: no
+
+- name: Create exporter users
+  user: 
+    name: "{{ item }}"
+    shell: /sbin/nologin 
+  with_items:
+  - node_exporter
+  - apache_exporter
+  - mysql_exporter
+  - prometheus
+  - bind 
