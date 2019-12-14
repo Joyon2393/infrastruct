@@ -10,6 +10,7 @@
         dest: /etc/netplan/55-enp0s8.yaml
       notify:
         - netplan apply
+        - fix dns
 
     - name: systemd-resolved
       service:
@@ -20,6 +21,11 @@
   handlers:
     - name: netplan apply
       shell: netplan apply
+      
+    - name: fix dns
+      template:
+        src: resolv.conf.fix.j2
+        dest: /etc/resolv.conf
 
 
 - name: setup bind and dns records
@@ -73,17 +79,6 @@
         dest: /etc/resolv.conf
 
   handlers:
-    - name: check conf
-      shell: named-checkconf
-
-    - name: restart bind
-      service:
-        name: bind9
-        state: restarted
-
-    - name: bind reload db
-      shell: rndc reload
-
     - name: get timestamp
       shell: "date +%s"
       register: timestamp
@@ -92,3 +87,14 @@
       template:
         src: templates/db.joyo.j2
         dest: /etc/bind/db.joyo
+
+    - name: check conf
+      shell: named-checkconf
+
+    - name: bind reload db
+      shell: rndc reload
+
+    - name: restart bind
+      service:
+        name: bind9
+        state: restarted

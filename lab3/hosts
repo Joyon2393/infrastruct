@@ -1,3 +1,2 @@
 [ubuntu]
-127.0.0.1 ansible_user=infradev ansible_port=20022
-127.0.0.1 ansible_user=joyonvm2 ansible_port=2222
+infra01 ansible_host=127.0.0.1 ansible_user=infradev1 ansible_port=20022

@@ -1,0 +1,11 @@
+---
+- name: Init
+  hosts: all
+  become: yes
+  tasks:
+  - name: disable sudo pass
+    copy:
+      dest: /etc/sudoers.d/{{ item }}
+      content: "{{ item }}      ALL = NOPASSWD: ALL"
+    with_items: 
+    - infradev1

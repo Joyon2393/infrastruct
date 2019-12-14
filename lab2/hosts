@@ -1,3 +1,2 @@
 [ubuntu]
-infra01 ansible_host=127.0.0.1 ansible_user=infradev ansible_port=20022
-infra02 ansible_host=127.0.0.1 ansible_user=infradev ansible_port=20023
+infra01 ansible_host=127.0.0.1 ansible_user=infradev1 ansible_port=20022

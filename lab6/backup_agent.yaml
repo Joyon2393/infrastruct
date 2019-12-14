@@ -23,7 +23,7 @@
     - name: Copy file with owner and permissions
       copy:
         src: "{{ item }}"
-        dest: "/home/{{ backup_user }}/.ssh/"
+        dest: "/home/backupusr/.ssh/"
         mode: 0600
         owner: backupusr
         group: backupusr

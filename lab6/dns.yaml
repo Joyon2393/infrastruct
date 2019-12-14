@@ -1,6 +1,6 @@
 ---
 - name: Backup DNS configuration
-  hosts: backup-remote
+  hosts: backup-1
   become: yes
   tasks:
   - name: Upload Cron Scripts to VM1

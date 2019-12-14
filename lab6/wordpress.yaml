@@ -1,6 +1,6 @@
 ---
 - name: Backup wordpress files and databases
-  hosts: backup-agent
+  hosts: backup-1
   become: yes
   tasks:
   - name: Upload Cron Scripts to VM1

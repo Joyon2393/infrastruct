@@ -15,9 +15,9 @@
         
     - name: Install PHP module for Apache2
       apt: 
-        name: ['libapache2-mod-php','php']
-        update_cache: yes 
-        state: latest
+        name=libapache2-mod-php
+        update_cache=yes 
+        state=latest
         
     - name: Configure Apache2 to listen on specified port
       lineinfile: 
@@ -40,17 +40,9 @@
       notify:
         - restart apache2
         
-        
   handlers:
     - name: restart apache2
       service: 
         name=apache2 
         state=restarted
   
-  
- 
-
-
- 
- 
-
