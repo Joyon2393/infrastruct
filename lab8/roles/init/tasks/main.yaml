@@ -1,0 +1,60 @@
+- name: Setup interface
+  template:
+    src: templates/ens38.j2
+    dest: /etc/netplan/55-ens38.yaml
+  notify:
+      - netplan apply
+      - systemd-resolved
+
+- name: Temporarily set nameservers to Google DNS so we can reach the interwebz
+  template:
+    src: resolv.temp.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Get processes
+  command: "ps -A"
+  register: processes
+
+- name: Show processes
+  debug:
+    var: processes.stdout_lines
+    
+- name: Ensure 'sysadmins' group exists
+  group:
+    name: sysadmins
+    state: present
+
+- name: Create users 'romankuchin' and 'hudolejev' part of 'sysadmins' group
+  user:
+    name: "{{ item }}"
+    shell: /bin/bash
+    group: sysadmins
+    append: yes
+  with_items:
+  - romankuchin
+  - hudolejev
+
+- name: Add SSH keys for users 'romankuchin' and 'hudolejev'
+  authorized_key:
+    user: "{{ item.name }}"
+    key: "{{ item.key }}"
+    state: present
+  with_items:
+    - { name: romankuchin, key: "https://github.com/romankuchin.keys" }
+    - { name: hudolejev, key: "https://github.com/hudolejev.keys" }
+    
+- name: Disable sudo password for created users
+  copy:
+    dest: /etc/sudoers.d/{{ item }}
+    content: "{{ item }}      ALL = NOPASSWD: ALL"
+  with_items:
+  - romankuchin
+  - hudolejev
+  - dev
+
+- name: setup syslog
+  template:
+    src: 51-telegraf.conf
+    dest: /etc/rsyslog.d/51-telegraf.conf
+  notify:
+    - restart rsyslog
