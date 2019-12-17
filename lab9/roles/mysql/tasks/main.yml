@@ -1,0 +1,56 @@
+- name: Install MYSQL Server
+  apt:
+    name: mysql-server
+    state: present
+
+
+- name: Install PyMYSQL
+  apt:
+    name: "{{ item }}"
+    state: present
+  become: yes
+  with_items:
+  - python-pymysql
+  - python3-pymysql
+
+- name: Install MySQL and python-mysqldb
+  apt: 
+    force_apt_get: yes
+    name: ['mysql-server', 'python-mysqldb']
+    update_cache: yes 
+    state: latest
+    install_recommends: yes
+
+- name: Start Mysql Service
+  service: 
+    name: mysql 
+    state: started 
+    enabled: true
+
+
+- name: create a new database with its name
+  mysql_db:
+    name: "{{ db_name }}"
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+    
+- name: create db user 
+  mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: "{{ mysql_host }}"
+    login_host: "{{ mysql_login_host }}"
+    priv: '{{db_name}}.*:ALL'
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: ensure mysql is configured to bind to wp server
+  ini_file:
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: "bind-address"
+    value: "{{ mysql_bind_address }}"
+  notify:
+    - restart mysql
+    

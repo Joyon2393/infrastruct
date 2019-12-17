@@ -1,0 +1,12 @@
+  
+- name: Create a grafana container
+  docker_container:
+    name: grafana-server
+    image: "grafana/grafana"
+    detach: True
+    state: started
+    published_ports:
+      - 3000:3000 
+    dns_servers:
+      - 192.168.56.102
+      - 192.168.56.103

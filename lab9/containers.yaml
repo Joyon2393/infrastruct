@@ -1,0 +1,21 @@
+- name: Setup bind on all machines
+  become: yes
+  hosts: all
+  roles:
+    - bind
+
+
+- name: Deploy docker containers in Infra01
+  become: yes
+  hosts: infra01
+  roles:
+    - wordpress
+    - grafana
+
+
+- name: Deploy mysql server and prometheus in Infra02
+  become: yes
+  hosts: infra02
+  roles:
+    - mysql
+    - prometheus
