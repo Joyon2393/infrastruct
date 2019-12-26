@@ -1,0 +1,42 @@
+---
+forwarders:
+  - 8.8.8.8
+  - 1.1.1.1
+  - 9.9.9.10
+localnets:
+  - 192.168.56.0/24
+  - 10.0.2.0/24
+  - localhost
+records:
+  - type: NS
+    entries:
+      - name: joyo.com.
+        address: infra01.joyo.com.
+      - name: joyo.com.
+        address: infra02.joyo.com.
+  - type: A
+    entries:
+      - name: infra01.joyo.com.
+        address: 192.168.56.102
+      - name: infra02.joyo.com.
+        address: 192.168.56.103
+      - name: infra.joyo.com.
+        addresses:
+          - 192.168.56.102
+          - 192.168.56.103
+  - type: CNAME
+    entries:
+      - name: ns
+        address: infra
+      - name: ns1
+        address: infra01
+      - name: ns2
+        address: infra02
+      - name: web
+        address: infra02
+      - name: grafana
+        address: infra01
+      - name: prometheus
+        address: infra01
+      - name: influxdb
+        address: infra02

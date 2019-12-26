@@ -1,0 +1,25 @@
+- name: Setup interface
+  template:
+    src: templates/enp0s8.j2
+    dest: /etc/netplan/55-enp0s8.yaml
+  notify:
+      - netplan apply
+      - systemd-resolved
+
+- name: Temporarily set nameservers to Google DNS so we can reach the interwebz
+  template:
+    src: resolv.temp.conf.j2
+    dest: /etc/resolv.conf
+
+- name: Add SSH keys 
+  authorized_key:
+    user: "infradev1"
+    key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+    state: present
+ 
+- name: Disable sudo password for created users
+  copy:
+    dest: /etc/sudoers.d/infradev1
+    content: "infradev1      ALL = NOPASSWD: ALL"
+  
+

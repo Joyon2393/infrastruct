@@ -1,0 +1,20 @@
+---
+- name: All
+  become: yes
+  hosts: InfraLegacy
+  roles:
+    - bind
+
+- name: Infra01
+  become: yes
+  hosts: infra01
+  roles:
+    - haproxy
+    - wordpress
+- name: Infra02
+  become: yes
+  hosts: infra02
+  roles:
+    - mysql
+    
+

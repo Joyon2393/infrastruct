@@ -1,0 +1,19 @@
+- name: get timestamp
+  shell: "date +%s"
+  register: timestamp
+
+- name: upload bind zone
+  template:
+    src: templates/db.joyo.j2
+    dest: /etc/bind/db.joyo
+
+- name: check conf
+  shell: named-checkconf
+
+- name: bind reload db
+  shell: rndc reload
+
+- name: restart bind
+  service:
+    name: bind9
+    state: restarted
