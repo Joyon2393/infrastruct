@@ -1,0 +1,6 @@
+---
+- name: Init machines
+  become: yes
+  hosts: InfraLegacy
+  roles:
+    - init

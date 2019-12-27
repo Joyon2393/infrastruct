@@ -1,0 +1,59 @@
+- name: Install MySQL
+  apt: 
+    name=mysql-server
+    update_cache=yes 
+    state=latest
+
+- name: Install python modules for ansible
+  apt: 
+    name: ['python-pymysql', 'python3-pymysql']
+    update_cache: yes 
+    state: latest
+- name: Install MySQL and python-mysqldb
+  apt: 
+    force_apt_get: yes
+    name: ['mysql-server', 'python-mysqldb']
+    update_cache: yes 
+    state: latest
+    install_recommends: yes
+    
+- name: Start Mysql Service
+  service: 
+    name: mysql 
+    state: started 
+    enabled: true
+
+- name: Create database
+  mysql_db:
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    name: "{{ db_name }}"
+    state: present
+
+- name: Create user 
+  mysql_user:
+    name: "{{ db_user }}"
+    password: "{{ db_password }}"
+    host: "{{ mysql_host }}"
+    login_host: "{{ mysql_login_host }}"
+    priv: '{{db_name}}.*:ALL'
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Create user for exporter 
+  mysql_user:
+    name: "{{ db_user_exporter }}"
+    password: "{{ db_password_exporter }}"
+    priv: '*.*:ALL'
+    state: present
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+
+- name: listen on 0.0.0.0
+  ini_file:
+    dest: /etc/mysql/mysql.conf.d/mysqld.cnf
+    section: mysqld
+    option: "bind-address"
+    value: "{{ mysql_bind_address }}"
+  notify:
+    - restart mysql
+    

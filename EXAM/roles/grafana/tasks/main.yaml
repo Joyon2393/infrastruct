@@ -1,0 +1,25 @@
+- name: install python pip and docker
+  apt:
+    state: latest
+    name: ['docker.io', 'python-pip', 'python3-pip']
+
+- name: Install docker and requests python modules
+  pip:
+    name:
+      - docker
+      - requests>=2.20.1  
+
+- name: Create a grafana container
+  docker_container:
+    name: grafana-server
+    image: "grafana/grafana"
+    restart_policy: always
+    detach: True
+    state: started
+    published_ports:
+      - 3000:3000 
+    dns_servers:
+      - 192.168.56.102
+      - 192.168.56.103
+    volumes:
+        - static-content:/var/lib/grafana

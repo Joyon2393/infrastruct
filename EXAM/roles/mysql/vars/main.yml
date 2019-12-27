@@ -1,0 +1,6 @@
+---
+mysql_bind_address: 0.0.0.0
+mysql_host: 192.168.56.102
+mysql_login_host: 192.168.56.103
+
+

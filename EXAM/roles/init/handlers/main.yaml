@@ -1,0 +1,8 @@
+- name: netplan apply
+  shell: netplan apply
+
+- name: systemd-resolved
+  service:
+      name: systemd-resolved
+      state: restarted
+      enabled: yes
