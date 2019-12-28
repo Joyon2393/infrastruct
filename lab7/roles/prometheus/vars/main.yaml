@@ -24,7 +24,6 @@ jobs:
     port: 9117
     targets:
       - infra01.joyo.com
-      - infra02.joyo.com
   - name: MySQL
     port: 9104
     targets:

@@ -7,16 +7,22 @@
     - mysql_exporter
 
 - name: setup bind and exporters
-  hosts: linux
+  hosts: Anakin
   become: yes
   roles:
     - bind
     - node_exporter
-    - apache_exporter
+    
 
 - name: prometheus
-  hosts: prometheus
+  hosts: infra02
   become: yes
   roles:
     - prometheus
     - grafana
+- name: setup bind and exporters
+  hosts: infra01
+  become: yes
+  roles:
+    - apache
+    - apache_exporter

@@ -1,0 +1,56 @@
+---
+- name: Init for Infra
+  hosts: infraLegacy
+  become: yes
+  tasks:
+    - name: Setup interface
+      template:
+        src: enp0s8.j2
+        dest: /etc/netplan/55-enp0s8.yaml
+      notify:
+          - netplan apply
+          - systemd-resolved
+          - dpkg
+    - name: resolv.conf fix
+      template:
+        src: resolv.conf.fix.j2
+        dest: /etc/resolv.conf
+  handlers:
+      - name: netplan apply
+        shell: netplan apply
+      - name: dpkg
+        shell: dpkg --configure -a
+      - name: systemd-resolved
+        service:
+            name: systemd-resolved
+            state: restarted
+            enabled: yes
+
+      
+
+- name: Init for Infra01
+  hosts: infra01
+  become: yes
+  tasks:
+  - name: Sudo without password
+    copy:
+      dest: /etc/sudoers.d/infra01
+      content: "infra01     ALL = NOPASSWD: ALL"  
+  - name: Initialize SSH connection
+    authorized_key:
+      user: infradev1
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+- name: Init for infra02
+  hosts: infra02
+  become: yes
+  tasks:
+  - name: Sudo without password
+    copy:
+      dest: /etc/sudoers.d/infra02
+      content: "infra02     ALL = NOPASSWD: ALL"  
+  - name: Initialize SSH connection
+    authorized_key:
+      user: infradev1
+      state: present
+      key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"

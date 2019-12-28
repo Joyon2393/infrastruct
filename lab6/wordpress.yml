@@ -1,0 +1,62 @@
+---
+- name: Install Apache, and phpmysql, PHP related modules.
+  hosts: infra01
+  become: yes
+  tasks:
+  - name: Install required apps
+    apt:
+      name: ["apache2", "php", "php-mysql", "libapache2-mod-php"]
+      state: present
+  - name: virtualhost on port 80
+    copy:
+      dest: /etc/apache2/sites-available/000-default.conf
+      src:  templates/000-default.conf
+  - name: download wordpress
+    get_url:
+      url: https://wordpress.org/latest.tar.gz
+      dest: /wordpress.tar.gz
+  - name: unzip wordpress
+    unarchive:
+      src: /wordpress.tar.gz
+      dest: /var/www
+      copy: no
+  - name: copy wp-config.php to local
+    template:
+      src: templates/wp-config.php
+      dest: /var/www/wordpress/wp-config.php
+  - name: Reload Apache
+    service:
+      name: apache2
+      state: restarted
+
+# CAN'T CONFIGURE SQL ON OTHER MACHINE AS IT MYSQL PRIV CONFIG NEED TO BE MANUALLY CONFIGURED
+- name: Configure Database
+  hosts: infra01
+  become: yes
+  tasks:
+  - name: Install MYSQL Server
+    apt:
+      name: mysql-server
+      state: present
+  - name: Install PyMYSQL
+    apt:
+      name: ["python-pymysql", "python3-pymysql"]
+      state: present
+    become: yes
+  - name: Start Mysql Service
+    service: 
+      name: mysql
+      state: started
+      enabled: true
+  - name: create a new database with its name
+    mysql_db:
+      name: "{{ wp_mysql_db }}"
+      state: present
+      login_unix_socket: /var/run/mysqld/mysqld.sock
+  - name: create db user 
+    mysql_user:
+      name: "{{ wp_mysql_user }}"
+      password: "{{ wp_mysql_password }}"
+      priv: '*.*:ALL'
+      state: present
+      login_unix_socket: /var/run/mysqld/mysqld.sock

@@ -1,0 +1,54 @@
+---
+- name: Setup Backup system according to SLA and Restore Plan
+  hosts: infra02
+  become: yes
+  tasks:
+  - name: Sudo without password
+    copy:
+      dest: /etc/sudoers.d/{{ item }}
+      content: "{{ item }}     ALL = NOPASSWD: ALL"  
+    with_items:
+    - infra02
+  - name: Create Sudo and Backup Groups
+    group:
+      name: "{{ item }}"
+      state: present
+    with_items:
+    - sudo
+    - backup
+  - name: Create User Backup 
+    user:
+      name: "backup"
+      password: ""
+      groups: backup
+      append: yes
+      shell: /bin/bash
+      state: present
+
+  - name: Install Duplicity
+    apt:
+      name: duplicity
+      force_apt_get: yes
+      state: latest
+    become_user: backup
+
+  - name: Initialize SSH connection from host to VM1
+    authorized_key:
+      user: "{{ item.name }}"
+      state: present
+      key: "{{ item.key }}"
+    with_items:
+    - { name: backup , key: "{{ lookup('file', '~/.ssh/id_rsa.pub') }}"}
+    
+  - name: Create Directory /srv/backup
+    file:
+      path: /srv/backup/{{ item }}
+      owner: backup
+      group: backup
+      state: directory
+      mode: 0775
+      recurse: yes
+    with_items:
+    - wp
+    - dns
+    - db-server

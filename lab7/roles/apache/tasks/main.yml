@@ -1,0 +1,22 @@
+- name: install Docker and friends
+  apt:
+    state: latest
+    force_apt_get: yes
+    name: ['docker.io','python-pip']
+
+- name: Install docker pip
+  pip:
+    name:
+      - docker
+      - requests>=2.20.1
+- name: Apache Docker Container
+  docker_container:
+      name: Apache
+      image: httpd:latest
+      detach: True
+      published_ports:
+      - 80:80
+      restart_policy: always
+      dns_servers:
+        - 192.168.56.102
+        - 192.168.56.103

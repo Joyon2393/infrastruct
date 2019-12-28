@@ -1,13 +1,41 @@
 ---
+- name: Initial setup
+  hosts: all
+  remote_user: user
+  become: yes
+  tasks:
+    - name: Setup interface
+      template:
+        src: templates/enp0s8.j2
+        dest: /etc/netplan/55-enp0s8.yaml
+      notify:
+        - netplan apply
+        - fix dns
+
+    - name: systemd-resolved
+      service:
+        name: systemd-resolved
+        state: stopped
+        enabled: no
+
+  handlers:
+    - name: netplan apply
+      shell: netplan apply
+      
+    - name: fix dns
+      template:
+        src: resolv.conf.fix.j2
+        dest: /etc/resolv.conf
+
+
 - name: setup bind and dns records
   hosts: infra
   become: yes
   tasks:
     - name: Install bind9
       apt: 
-        name: bind9
-        update_cache: yes
-        state: latest
+        name=bind9 
+        state=latest
 
     - name: configure bind
       template:
@@ -70,4 +98,3 @@
       service:
         name: bind9
         state: restarted
-
