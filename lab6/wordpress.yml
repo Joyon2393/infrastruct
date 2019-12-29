@@ -29,7 +29,7 @@
       name: apache2
       state: restarted
 
-# CAN'T CONFIGURE SQL ON OTHER MACHINE AS IT MYSQL PRIV CONFIG NEED TO BE MANUALLY CONFIGURED
+
 - name: Configure Database
   hosts: infra01
   become: yes
@@ -43,6 +43,13 @@
       name: ["python-pymysql", "python3-pymysql"]
       state: present
     become: yes
+  - name: Install MySQL and python-mysqldb
+    apt: 
+      force_apt_get: yes
+      name: ['mysql-server', 'python-mysqldb']
+      update_cache: yes 
+      state: latest
+      install_recommends: yes 
   - name: Start Mysql Service
     service: 
       name: mysql

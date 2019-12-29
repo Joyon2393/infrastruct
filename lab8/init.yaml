@@ -1,6 +1,6 @@
 ---
 - name: Init
-  hosts: all
+  hosts: Luke
   become: yes
   roles:
     - init

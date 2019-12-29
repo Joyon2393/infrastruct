@@ -1,6 +1,6 @@
 ---
-- name: Init machines
+- name: Init
+  hosts: Luke
   become: yes
-  hosts: InfraLegacy
   roles:
     - init

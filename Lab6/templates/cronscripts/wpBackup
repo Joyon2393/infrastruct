@@ -1,4 +1,0 @@
-11 0 * * *    backupusr  cp -R /var/www/html /var/backup/wordpress
-22 0 * * 0    backupusr  duplicity --no-encryption full /var/www/html/ rsync://192.168.56.103//srv/backup/wordpress/
-22 0 * * 1-6  backupusr  duplicity --no-encryption incremental /var/www/html/ rsync://192.168.56.103//srv/backup/wordpress/
-11 0 * * 0    backupusr  duplicity delete-older-than 30d rsync://192.168.56.103//srv/backup/wordpress/

@@ -1,6 +1,6 @@
 - name: Setup bind on all machines
   become: yes
-  hosts: all
+  hosts: Luke
   roles:
     - bind
 

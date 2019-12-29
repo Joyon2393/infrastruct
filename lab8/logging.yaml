@@ -1,7 +1,7 @@
 ---
 - name: bind
   become: yes
-  hosts: linux
+  hosts: Luke
   roles:
     - bind
   tags:
