@@ -25,11 +25,11 @@ The following is a summary of our infrastracture architecture:
 - Prometheus: Provisioned with Ansible along with exporters.
 - Bind: Provisioned with Ansible.
 
-## RTO
-- 8 hours maximum of downtime is the way to go for our highly available services.
+## Recovery Point Objective
+The maximum timeframe of lost data in the event of a disaster is 1 day, considering that backups are taken only daily.
 
-## RPO
-- We can only afford 8 hours of RTO, therefore, we should have just 12 hours of RPO to keep data loss at a minimum.
+## Recovery Time Objective
+The maximum tolerable downtime for services is 2 hours for extreme cases, although we aim to restore services and data from backup in maximum 1 hour.
 
 ## Frequency
 - Full local backups: every night

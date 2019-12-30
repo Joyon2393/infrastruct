@@ -6,7 +6,7 @@
       - netplan apply
       - systemd-resolved
      
-- name: Temporarily set nameservers to Google DNS so we can reach the interwebz
+- name: Temporarily set nameservers to Google DNS so we can reach the interweb
   template:
     src: resolv.temp.conf.j2
     dest: /etc/resolv.conf

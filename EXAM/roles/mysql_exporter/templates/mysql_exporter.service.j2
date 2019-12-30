@@ -6,7 +6,7 @@ After=network.target
 [Service]
 User=mysql_exporter
 Group=mysql_exporter
-Environment="DATA_SOURCE_NAME={{db_user_exporter}}:{{db_password_exporter}}@tcp(127.0.0.1:3306)/"
+Environment="DATA_SOURCE_NAME={{db_user_exporter}}:{{db_password}}@tcp(127.0.0.1:3306)/"
 Type=simple
 ExecStart=/opt/mysql_exporter/mysqld_exporter
 

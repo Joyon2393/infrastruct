@@ -19,7 +19,7 @@
     published_ports:
       - 3000:3000 
     dns_servers:
-      - 192.168.56.102
-      - 192.168.56.103
+      - "{{ dns_maste }}"
+      - "{{ dns_slave }}"
     volumes:
         - static-content:/var/lib/grafana
