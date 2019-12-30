@@ -32,25 +32,21 @@
 - name: Create user 
   mysql_user:
     name: "{{ db_user }}"
-    password: "{{ db_password }}"
+    password: "{{ db_password_exporter }}"
     host: "{{ mysql_host }}"
     login_host: "{{ mysql_login_host }}"
     priv: '{{db_name}}.*:ALL'
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  notify:
-    -restart mysql
-
+  
 - name: Create user for exporter 
   mysql_user:
     name: "{{ db_user }}"
-    password: "{{ db_password }}"
+    password: "{{ db_password_exporter }}"
     priv: '*.*:ALL'
     state: present
     login_unix_socket: /var/run/mysqld/mysqld.sock
-  notify:
-    -restart mysql
-
+ 
 - name: listen on 0.0.0.0
   ini_file:
     dest: /etc/mysql/mysql.conf.d/mysqld.cnf
