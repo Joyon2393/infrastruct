@@ -1,6 +1,6 @@
 - name: restart sql_exporter
   service: 
-    name: mysql 
+    name: mysql_exporter
     state: restarted 
 - name: daemon reload
   shell: systemctl daemon-reload

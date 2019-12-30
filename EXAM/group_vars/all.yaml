@@ -2,7 +2,7 @@ wordpress_instances: [1, 2]
 wordpress_active_instances: 2
 master_ip: 192.168.56.102
 slave_ip: 192.168.56.103
-db_user_exporter: "exporter"
+db_user_exporters: "exporter"
 db_name: "wordpress"
 db_user: "wpuser"
 db_password: !vault |
